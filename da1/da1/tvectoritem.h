@@ -5,14 +5,18 @@
 class TVectorItem {
 public:
     double Key;
-    unsigned int Val;
-    TVectorItem(double inpKey, unsigned int inpVal) {
+    unsigned long long Val;
+    TVectorItem(double inpKey, unsigned long long inpVal) {
         this->Key = inpKey;
         this->Val = inpVal;
     }
 
     bool operator <(TVectorItem r) {
         return this->Key < r.Key;
+    }
+
+    bool operator >(TVectorItem r) {
+        return this->Key > r.Key;
     }
 };
 

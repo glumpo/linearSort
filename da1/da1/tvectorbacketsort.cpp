@@ -5,10 +5,10 @@ const double TVectorBacketSort::MIN_KEY = -100.0;
 
 void TVectorBacketSort::Sort() {
     const size_t n = this->Size();
-    TVector<TVectorNonLinerSort> buckets(n);
+    TVector<TVectorNonLinerSort> buckets(n + 1);
 
     for (auto i = 0; i < n; ++i) {
-        size_t index = (size_t) n * (this->Data[i].Key - MIN_KEY) / (MAX_KEY - MIN_KEY);
+        size_t index = (size_t) n * ((this->Data[i].Key - MIN_KEY) / (MAX_KEY - MIN_KEY));
         buckets[index].PushBack(TVectorItem(this->Data[i].Key, this->Data[i].Val));
     }
 
