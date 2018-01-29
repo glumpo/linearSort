@@ -28,7 +28,7 @@ TVector<T>::~TVector() {
 }
 
 template <class T>
-bool TVector<T>::PushBack(T el) {
+void TVector<T>::PushBack(T el) {
     if (this->RealSize == this->LastIndex) {
         auto tmpData = this->Data;
 

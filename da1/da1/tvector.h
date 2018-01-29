@@ -14,7 +14,7 @@ public:
     TVector() : TVector(0) {}
     virtual ~TVector();
 
-    bool PushBack(T el);
+    void PushBack(T el);
     T &operator [](unsigned int index);
     size_t Size();
 
