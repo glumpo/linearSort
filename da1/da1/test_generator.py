@@ -18,7 +18,7 @@ if __name__ == "__main__":
                 key = random.uniform(MIN_KEY_VALUE, MAX_KEY_VALUE)
                 value = random.randint(MIN_VALUE, MAX_VALUE)
                 values.append( (key, value) )
-                output.write( "{:.6f} {}\n".format(key, value) )
+                output.write( "{:.6f}\t{}\n".format(key, value) )
         # Answer.
         # values[0][0] -- key
         # values[0][1] -- value
@@ -26,4 +26,4 @@ if __name__ == "__main__":
         with open( output_filename, 'w') as output:
             values = sorted( values, key=lambda x: x[0] )
             for value in values:
-                output.write( "{:.6f} {}\n".format(value[0], value[1]) )
+                output.write( "{:.6f}\t{}\n".format(value[0], value[1]) )

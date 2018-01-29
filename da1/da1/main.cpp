@@ -27,7 +27,7 @@
 inline void read_input(TVectorBacketSort &inp) {
     double tmpKey = 0.0;
     unsigned long long int tmpVal = 0;
-    while (scanf("%lf %llu", &tmpKey, &tmpVal) != EOF) {
+    while (scanf("%lf\t%llu", &tmpKey, &tmpVal) != EOF) {
         inp.PushBack(TVectorItem(tmpKey, tmpVal));
     }
 }
@@ -57,7 +57,7 @@ int main() {
     read_input(inp);
     inp.Sort();
     for (auto i = 0; i < inp.Size(); ++i) {
-        printf("%.6lf %llu\n", inp[i].Key, inp[i].Val);
+        printf("%.6lf\t%llu\n", inp[i].Key, inp[i].Val);
     }
     return 0;
 }

@@ -1,8 +1,9 @@
 #ifndef TVECTOR_H
 #define TVECTOR_H
 
-#include <malloc.h>
+#include <stdlib.h>
 #include <exception>
+#include <new>
 
 #include "tvectoritem.h"
 
