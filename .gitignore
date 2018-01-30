@@ -1,8 +1,8 @@
 da*/build*
-da[1-7]
 *.o
 
 tests/
 *.t
 *.a
 
+.tar
