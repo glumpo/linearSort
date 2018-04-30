@@ -1,0 +1,3 @@
+/home/fisherman/Documents/progs/labs/da/da1/build-da1-Desktop-Default/CMakeFiles/rebuild_cache.dir
+/home/fisherman/Documents/progs/labs/da/da1/build-da1-Desktop-Default/CMakeFiles/da1.dir
+/home/fisherman/Documents/progs/labs/da/da1/build-da1-Desktop-Default/CMakeFiles/edit_cache.dir

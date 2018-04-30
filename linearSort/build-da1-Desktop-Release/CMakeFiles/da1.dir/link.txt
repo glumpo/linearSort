@@ -1,0 +1,1 @@
+/usr/bin/g++  -O3 -DNDEBUG  -rdynamic CMakeFiles/da1.dir/benchmark.cpp.o CMakeFiles/da1.dir/main.cpp.o CMakeFiles/da1.dir/tvector.cpp.o CMakeFiles/da1.dir/tvectorbacketsort.cpp.o CMakeFiles/da1.dir/tvectornonlinersort.cpp.o  -o da1 
