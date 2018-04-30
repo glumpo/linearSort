@@ -8,10 +8,12 @@ LIBS += -lbenchmark
 SOURCES += main.cpp \
     tbtree.cpp \
     tbtreeitem.cpp \
-    tvector.cpp
+    tvector.cpp \
+    tbtreenode.cpp
 
 HEADERS += \
     tbtree.h \
     tbtreeitem.h \
     tvector.h \
-    titem.h
+    tvectoritem.h \
+    tbtreenode.h
