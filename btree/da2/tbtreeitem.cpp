@@ -1,6 +1,5 @@
 #include "tbtreeitem.h"
 
-TBTreeItem::TBTreeItem()
-{
+TBTreeItem::TBTreeItem() {
 
 }
