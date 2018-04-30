@@ -5,4 +5,4 @@ tests/
 *.t
 *.a
 
-.tar
+*.tar

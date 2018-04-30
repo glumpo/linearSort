@@ -13,7 +13,7 @@ public:
         Key(key),
         Value(val) {}
     ~TBTreeItem() {
-        // Checkes is redundant since C++14 can deal with delete nullptr
+        // NOTE: Checkes is redundant since C++14 can deal with delete nullptr
         if (Left)
             delete Left;
         if (Right)
