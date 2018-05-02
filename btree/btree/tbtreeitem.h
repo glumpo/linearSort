@@ -1,7 +1,7 @@
 #ifndef TBTREEITEM_H
 #define TBTREEITEM_H
 
-#include "tbtreenode.h"
+#include "list.h"
 
 class TBTreeItem
 {
