@@ -24,10 +24,11 @@ public:
         Size = 0;
     }
 
-    bool       Push(const T v);
-    T Pop(const size_t n); // throws
-    T operator[] (const size_t n); // throws
-    typeof(Size) GetSize();
+    T      Pop(const size_t n); // throws
+    T&     operator[] (const size_t n); // throws
+    // Works Corectly on n = GetSize() and n = 0
+    bool   InsertBefore(T val, size_t n);
+    size_t GetSize();
 
 private:
     size_t Size;
