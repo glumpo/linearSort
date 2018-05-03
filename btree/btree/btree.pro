@@ -6,16 +6,18 @@
 HEADERS = \
    $$PWD/tbtree.h \
    $$PWD/tbtreeitem.h \
-   $$PWD/tbtreenode.h \
+   $$PWD/list.h \
    $$PWD/tvector.h \
-   $$PWD/tvectoritem.h
+   $$PWD/tvectoritem.h \
+    tbtreenode.h
 
 SOURCES = \
    $$PWD/main.cpp \
    $$PWD/tbtree.cpp \
    $$PWD/tbtreeitem.cpp \
-   $$PWD/tbtreenode.cpp \
-   $$PWD/tvector.cpp
+   $$PWD/list.cpp \
+   $$PWD/tvector.cpp \
+    tbtreenode.cpp
 
 INCLUDEPATH = \
     $$PWD/.

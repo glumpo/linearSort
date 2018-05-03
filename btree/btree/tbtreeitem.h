@@ -30,9 +30,6 @@ public:
         return !(*this == r);
     }
 
-    TBTreeNode *Left;
-    TBTreeNode *Right;
-
 private:
     KeyType Key;
     ValueType Value;
