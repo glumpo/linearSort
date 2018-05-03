@@ -32,6 +32,12 @@ TListItem TList<T>::Pop(const size_t n) {
 
 }
 
+template<class T>
+TList::TList() {
+    base = nullptr;
+    Size = 0;
+}
+
 /*
  * Throws
  */
@@ -76,3 +82,36 @@ template <class T>
 size_t TList<T>::GetSize() {
     return this->Size;
 }
+
+template<class T>
+void TList::TakeAway(TList from, size_t first_i, size_t n) {
+    auto lastInBase = this->base;
+    for (size_t i = 0; i < this->Size; ++i) {
+        lastInBase = lastInBase->Right;
+    }
+
+    auto firstToTake = from.base;
+    for (size_t i = 0; i < first_i; ++i) {
+        firstToTake = firstToTake->Right;
+    }
+
+    auto lastToTake = firstToTake;
+    for (size_t i = 0; i < n; ++i) {
+        lastToTake = lastToTake->Right;
+    }
+
+    lastInBase->Right = firstToTake;
+    from.base =  lastToTake->Right;
+    lastToTake->Right = nullptr;
+}
+
+
+
+
+
+
+
+
+
+
+
