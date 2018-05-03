@@ -1,18 +1,22 @@
+#ifndef LIST_CPP
+#define LIST_CPP
+
+
 #include "list.h"
 
 /*
  * Throws
  */
 template <class T>
-TListItem TList<T>::Pop(const size_t n) {
+T TList<T>::Pop(const size_t n) {
     if (this->GetSize() <= n) {
         throw std::out_of_range("TBTreeNode::Pop: size of list <= n");
     }
 
     if (0 == n) {
-        auto      res = this->base->val;
-        auto oldBase = this->base->val;
-        this->base = this->base->Right;
+        auto     res = this->base->val;
+        auto oldBase = this->base;
+        this->base   = this->base->Right;
 
         delete oldBase;
         return res;
@@ -33,7 +37,7 @@ TListItem TList<T>::Pop(const size_t n) {
 }
 
 template<class T>
-TList::TList() {
+TList<T>::TList() {
     base = nullptr;
     Size = 0;
 }
@@ -55,21 +59,22 @@ T& TList<T>::operator[](const size_t n) {
 }
 
 template<class T>
-bool TList::InsertBefore(T val, size_t n) {
-    auto new_el = new TListItem<T>(v);
+bool TList<T>::InsertBefore(T val, size_t n) {
+    this->Size += 1;
+    auto new_el = new TListItem<T>(val);
     if (!new_el) {
         return false;
     }
 
     if (0 == n) {
-        new_el->Right = base;
+        new_el->Right = this->base;
         base = new_el;
         return true;
     }
 
     // if (n != 0)
     auto pre = base;
-    for (int i = 0; i < n-1; ++i) {
+    for (size_t i = 0; i < n-1; ++i) {
         pre = pre->Right;
     }
     new_el->Right = pre->Right;
@@ -84,7 +89,7 @@ size_t TList<T>::GetSize() {
 }
 
 template<class T>
-void TList::TakeAway(TList from, size_t first_i, size_t n) {
+void TList<T>::TakeAway(TList from, size_t first_i, size_t n) {
     auto lastInBase = this->base;
     for (size_t i = 0; i < this->Size; ++i) {
         lastInBase = lastInBase->Right;
@@ -105,13 +110,4 @@ void TList::TakeAway(TList from, size_t first_i, size_t n) {
     lastToTake->Right = nullptr;
 }
 
-
-
-
-
-
-
-
-
-
-
+#endif // LIST_CPP

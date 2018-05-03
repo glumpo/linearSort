@@ -7,14 +7,17 @@
 
 #include <iostream>
 
-#include "tvector.h"
-#include "tvector.cpp"
+#include "tbtree.h"
 
 int main() {
-    const auto n = 10000;
-    TVector<int> test;
-    for (int i = 0; i < n; ++i) {
-        test.PushBack(i);
-    }
+//    std::cout << "Starting test" << std::endl;
+//    TBTree test = TBTree();
+//    std::cout << "Created" <<  std::endl;
+//    test.Insert(4,5.6);
+//    std::cout << "Iserted" <<  std::endl;;
+//    std::cout << test.Search(0) <<  std::endl;
+//    std::cout << "Exiting" <<  std::endl;
+
+    TBTree test = TBTree();
     return 0;
 }

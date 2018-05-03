@@ -29,7 +29,7 @@ public:
 
 private:
     size_t Size;
-    TListItem *base;
+    TListItem<T> *base;
 
 };
 

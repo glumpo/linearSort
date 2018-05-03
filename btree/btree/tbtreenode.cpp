@@ -9,11 +9,11 @@ TBTreeItem &TBTreeNode::operator[](size_t n) {
     return items[n];
 }
 
-TBTreeNode TBTreeNode::LeftChild(size_t n) {
+TBTreeNode* TBTreeNode::LeftChild(size_t n) {
     return children[this->LCI(n)];
 }
 
-TBTreeNode TBTreeNode::RightChild(size_t n) {
+TBTreeNode* TBTreeNode::RightChild(size_t n) {
     return children[RCI(n)];
 }
 
@@ -35,11 +35,11 @@ bool TBTreeNode::InsertBefore(TBTreeItem val, size_t n) {
     return true;
 }
 
-bool TBTreeNode::InsertInSorted(const TBTreeItem val) {
+bool TBTreeNode::InsertInSorted(TBTreeItem ins) {
     size_t i = 0;
-    for (; i < items.GetSize() && val < items[i]; ++i)
+    for (; i < items.GetSize() && ins < items[i]; ++i)
         ;
-    InsertBefore(val, i);
+    InsertBefore(ins, i);
     return true;
 }
 

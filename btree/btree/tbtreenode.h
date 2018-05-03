@@ -2,6 +2,7 @@
 #define TBTREENODE_H
 
 #include "list.h"
+#include "list.cpp"
 #include "tbtreeitem.h"
 
 class TBTreeNode
@@ -9,13 +10,13 @@ class TBTreeNode
 public:
     size_t Size();
     TBTreeItem& operator[] (size_t n);
-    TBTreeNode LeftChild(size_t n);
-    TBTreeNode RightChild(size_t n);
+    TBTreeNode* LeftChild(size_t n);
+    TBTreeNode* RightChild(size_t n);
 
     // Throws
     TBTreeItem Pop(size_t n);
     bool InsertBefore(TBTreeItem val, size_t n);
-    bool InsertInSorted(const TBTreeItem val);
+    bool InsertInSorted(TBTreeItem ins);
     void SplitLeftChild(size_t n);
 
 
