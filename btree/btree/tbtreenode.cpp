@@ -43,6 +43,20 @@ bool TBTreeNode::InsertInSorted(const TBTreeItem val) {
     return true;
 }
 
+void TBTreeNode::SplitLeftChild(size_t n) {
+    auto left = new TBTreeNode();
+    auto right= new TBTreeNode();
+    auto oldChild = this->children.Pop(LCI(n));
+
+    left->items.TakeAway(oldChild->items, 0, oldChild->items.GetSize() / 2 - 1);
+    left->children.TakeAway(oldChild->children, 0, oldChild->children.GetSize() / 2 - 1);
+
+    this->InsertBefore(oldChild->Pop(0), n);
+
+    right->items.TakeAway(oldChild->items, 0, oldChild->items.GetSize());
+    right->children.TakeAway(oldChild->children, 0, oldChild->children.GetSize());
+}
+
 size_t TBTreeNode::LCI(size_t item_index) {
     return item_index;
 }

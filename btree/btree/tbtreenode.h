@@ -16,6 +16,7 @@ public:
     TBTreeItem Pop(size_t n);
     bool InsertBefore(TBTreeItem val, size_t n);
     bool InsertInSorted(const TBTreeItem val);
+    void SplitLeftChild(size_t n);
 
 
 private:
@@ -23,9 +24,9 @@ private:
     TList<TBTreeItem> items;
     TList<TBTreeNode*> children;
 
-    /* LeftChildIndex */
+    /* Left Child Index */
     size_t LCI(size_t item_index);
-    /* RightChildIndex */
+    /* Right Child Index */
     size_t RCI(size_t item_index);
 };
 
