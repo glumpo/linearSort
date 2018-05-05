@@ -25,6 +25,9 @@ public:
     ValueType GetVal() {
         return this->Value;
     }
+    KeyType GetKey() {
+        return this->Key;
+    }
 
 private:
     KeyType Key;
