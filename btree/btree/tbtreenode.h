@@ -8,6 +8,11 @@
 class TBTreeNode
 {
 public:
+    TBTreeNode(bool leaf);
+
+//    TODO: Rewrite all using of operator[]
+//    or make a cash for prev element of operator[]
+//    to archive O(n) on search
     size_t Size();
     TBTreeItem& operator[] (size_t n);
     TBTreeNode* LeftChild(size_t n);
@@ -16,9 +21,11 @@ public:
     // Throws
     TBTreeItem Pop(size_t n);
     bool InsertBefore(TBTreeItem val, size_t n);
-    bool InsertInSorted(TBTreeItem ins);
+    size_t InsertInSorted(TBTreeItem ins);
     void SplitLeftChild(size_t n);
+    TBTreeNode *Split(bool leaf);
 
+    bool Leaf;
 
 private:
     // WARNING: Be carefull with associated lists
