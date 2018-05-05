@@ -18,14 +18,16 @@ TBTree::~TBTree() {
 
 TBTreeItem::ValueType TBTree::Search(TBTreeItem::KeyType k) {
     auto cur = root;
-    TBTreeItem::ValueType candidate;
+    TBTreeItem::ValueType candidateVal;
+    TBTreeItem::KeyType   candidateKey;
     do {
         size_t i = 0;
         for (; i < cur->Size() && k > (*cur)[i].GetKey(); ++i)
             ;
-        candidate = (*cur)[i].GetVal();
-    } while (k != candidate);
-    return candidate;
+        candidateKey = (*cur)[i].GetKey();
+        candidateVal = (*cur)[i].GetVal();
+    } while (k != candidateKey);
+    return candidateVal;
 }
 
 bool TBTree::Insert(TBTreeItem item) {
