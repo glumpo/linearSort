@@ -17,14 +17,53 @@ TBTree::~TBTree() {
 }
 
 TBTreeItem::ValueType TBTree::Search(TBTreeItem::KeyType k) {
-    return (*root)[0].GetVal();
+    auto cur = root;
+    TBTreeItem::ValueType candidate;
+    do {
+        size_t i = 0;
+        for (; i < cur->Size() && k > (*cur)[i].GetKey(); ++i)
+            ;
+        candidate = (*cur)[i].GetVal();
+    } while (k != candidate);
+    return candidate;
 }
 
 bool TBTree::Insert(TBTreeItem item) {
     if (!root) {
-        root = new TBTreeNode();
-        root->InsertInSorted(item);
-        return true;
+        root = new TBTreeNode(true);
     }
 
+    if (MaxNumOfElements() <= root->Size()) {
+        root = root->Split(root->Leaf);
+    }
+
+    auto cur = root;
+    auto prev = cur;
+    while (true != cur->Leaf) {
+        size_t i = 0;
+        for (; i < cur->Size() && (*cur)[i] < item; ++i)
+            ;
+        if (cur->Size() == i)
+            --i;
+
+        prev = cur;
+        if (item < (*cur)[i]) {
+            cur = cur->LeftChild(i);
+            if (MaxNumOfElements() <= cur->Size()) {
+                prev->SplitLeftChild(i);
+                cur = prev;
+                continue;
+            }
+        }
+        else {
+            cur = cur->RightChild(i);
+            if (MaxNumOfElements() <= cur->Size()) {
+                prev->SplitLeftChild(i + 1);
+                cur = prev;
+                continue;
+            }
+        }
+    }
+    cur->InsertInSorted(item);
+    return true;
 }

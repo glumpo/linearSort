@@ -7,7 +7,10 @@
 class TBTree
 {
 public:
-    static const size_t T_OF_TREE = 2;
+    static const size_t DEGREE = 2;
+    inline size_t MaxNumOfElements() {
+        return 2 * DEGREE - 1;
+    }
     TBTree();
     ~TBTree();
 
