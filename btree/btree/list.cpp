@@ -12,6 +12,7 @@ T TList<T>::Pop(const size_t n) {
     if (this->GetSize() <= n) {
         throw std::out_of_range("TBTreeNode::Pop: size of list <= n");
     }
+    this->Size -= 1;
 
     if (0 == n) {
         auto     res = this->base->val;
@@ -60,10 +61,19 @@ T& TList<T>::operator[](const size_t n) {
 
 template<class T>
 bool TList<T>::InsertBefore(T val, size_t n) {
-    this->Size += 1;
     auto new_el = new TListItem<T>(val);
     if (!new_el) {
         return false;
+    }
+    this->Size += 1;
+
+    if (!base) {
+        base = new_el;
+        return true;
+    }
+
+    if (n > this->GetSize()) {
+        n = this->GetSize();
     }
 
     if (0 == n) {
@@ -71,16 +81,24 @@ bool TList<T>::InsertBefore(T val, size_t n) {
         base = new_el;
         return true;
     }
-
-    // if (n != 0)
-    auto pre = base;
-    for (size_t i = 0; i < n-1; ++i) {
-        pre = pre->Right;
+    else if (this->GetSize() == n) {
+        auto pre = this->base;
+        while (pre->Right) {
+            pre = pre->Right;
+        }
+        pre->Right = new_el;
+        return true;
     }
-    new_el->Right = pre->Right;
-    pre->Right = new_el;
+    else {
+        auto pre = this->base;
+        for (size_t i = 0; i < n - 1; ++i) {
+            pre = pre->Right;
+        }
+        new_el->Right = pre->Right;
+        pre->Right = new_el;
 
-    return true;
+        return true;
+    }
 }
 
 template <class T>
@@ -90,6 +108,7 @@ size_t TList<T>::GetSize() {
 
 template<class T>
 void TList<T>::TakeAway(TList from, size_t first_i, size_t n) {
+    size_t last_i = first_i + n - 1;
     auto lastInBase = this->base;
     for (size_t i = 0; i < this->Size; ++i) {
         lastInBase = lastInBase->Right;
@@ -101,13 +120,19 @@ void TList<T>::TakeAway(TList from, size_t first_i, size_t n) {
     }
 
     auto lastToTake = firstToTake;
-    for (size_t i = 0; i < n; ++i) {
+    for (size_t i = first_i; i < last_i; ++i) {
         lastToTake = lastToTake->Right;
     }
 
-    lastInBase->Right = firstToTake;
+    if (lastInBase)
+        lastInBase->Right = firstToTake;
+    else
+        this->base = firstToTake;
     from.base =  lastToTake->Right;
     lastToTake->Right = nullptr;
+
+    this->Size += n;
+    from.Size  -= n;
 }
 
 #endif // LIST_CPP
