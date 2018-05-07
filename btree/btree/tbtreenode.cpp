@@ -40,7 +40,7 @@ bool TBTreeNode::InsertBefore(TBTreeItem val, size_t n) {
 size_t TBTreeNode::InsertInSorted(TBTreeItem ins) {
     size_t i = 0;
     for (auto it : items) {
-        if (it < ins)
+        if (ins < it)
             break;
         ++i;
     }

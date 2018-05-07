@@ -29,7 +29,6 @@ TBTreeItem::ValueType TBTree::Search(TBTreeItem::KeyType k) {
 }
 
 // TODO: Delete operator[], use iterator
-// FIXME: It adds element in strange order...
 bool TBTree::Insert(TBTreeItem item) {
     if (!root) {
         root = new TBTreeNode(true);
