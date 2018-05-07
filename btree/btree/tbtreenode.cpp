@@ -39,8 +39,11 @@ bool TBTreeNode::InsertBefore(TBTreeItem val, size_t n) {
 
 size_t TBTreeNode::InsertInSorted(TBTreeItem ins) {
     size_t i = 0;
-    for (; i < items.GetSize() && ins < items[i]; ++i)
-        ;
+    for (auto it : items) {
+        if (it < ins)
+            break;
+        ++i;
+    }
     InsertBefore(ins, i);
     return i;
 }
@@ -51,8 +54,11 @@ TBTreeNode* TBTreeNode::Split(bool leaf) {
     auto right   = this;
     right->Leaf  = leaf;
 
-    left->items.TakeAway(items, 0, items.GetSize() / 2 - 1);
-    left->children.TakeAway(children, 0, children.GetSize() / 2 - 1);
+    const size_t n = (items.GetSize() % 2 == 1)
+            ?   (items.GetSize() / 2)
+            : ( (items.GetSize() - 1) / 2);
+    left->items.TakeAway(items, 0, n);
+    left->children.TakeAway(children, 0, n + 1);
 
     newRoot->InsertInSorted(this->Pop(0));
     newRoot->children[LCI(0)] = left;
@@ -72,6 +78,15 @@ void TBTreeNode::SplitLeftChild(size_t n) {
     this->InsertBefore(oldChild->Pop(0), n);
     this->children[LCI(n)] = left;
     this->children[RCI(n)] = right;
+}
+
+
+decltype(TBTreeNode::items.begin()) TBTreeNode::begin() {
+    return items.begin();
+}
+
+decltype(TBTreeNode::items.end()) TBTreeNode::end() {
+    return items.end();
 }
 
 size_t TBTreeNode::LCI(size_t item_index) {

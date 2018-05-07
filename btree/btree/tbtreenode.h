@@ -7,6 +7,16 @@
 
 class TBTreeNode
 {
+private:
+    // WARNING: Be carefull with associated lists
+    TList<TBTreeItem> items;
+    TList<TBTreeNode*> children;
+
+    /* Left Child Index */
+    size_t LCI(size_t item_index);
+    /* Right Child Index */
+    size_t RCI(size_t item_index);
+
 public:
     TBTreeNode(bool leaf);
 
@@ -25,17 +35,11 @@ public:
     void SplitLeftChild(size_t n);
     TBTreeNode *Split(bool leaf);
 
+    // auto used to avoid usig TList realisation details
+    decltype(items.begin()) begin();
+    decltype(items.end())   end();
+
     bool Leaf;
-
-private:
-    // WARNING: Be carefull with associated lists
-    TList<TBTreeItem> items;
-    TList<TBTreeNode*> children;
-
-    /* Left Child Index */
-    size_t LCI(size_t item_index);
-    /* Right Child Index */
-    size_t RCI(size_t item_index);
 };
 
 #endif // TBTREENODE_H
