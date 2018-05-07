@@ -19,12 +19,27 @@ TBTree::~TBTree() {
 // FIXME: Now searches only in first node
 TBTreeItem::ValueType TBTree::Search(TBTreeItem::KeyType k) {
     auto curNode = root;
-    for (auto it : *curNode) {
-        if (k == it.GetKey()) {
-            return it.GetVal();
+
+    while (true) {
+        auto it = curNode->begin();
+        for (; it != curNode->end(); ++it) {
+            if ((*it).GetKey() >= k)
+                break;
+        }
+
+        if (curNode->Size() == it.getIndex()) {
+            curNode = curNode->RightChild(it.getIndex() - 1);
+        }
+        else if ((*it).GetKey() == k) {
+            return (*it).GetVal();
+        }
+        else if ((*it).GetKey() > k) {
+            curNode = curNode->LeftChild(it.getIndex());
+        }
+        else {
+            curNode = curNode->RightChild(it.getIndex());
         }
     }
-
     return 0;
 }
 
