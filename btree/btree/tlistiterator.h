@@ -1,12 +1,15 @@
 #ifndef TLISTITERATOR_H
 #define TLISTITERATOR_H
 
+#include <stddef.h>
+
 template <class node, class T>
 class TListIterator
 {
 public:
     TListIterator(node *n) {
         this->curent_ptr = n;
+        this->index = 0;
     }
     virtual ~TListIterator() {}
 
@@ -24,13 +27,15 @@ public:
     }
 
     TListIterator operator ++() {
+        ++index;
         step_forward();
         return *this;
     }
 
     TListIterator operator ++(int) {
         auto cur = *this;
-        this->step_forward();
+        ++index;
+        step_forward();
         return cur;
     }
 
@@ -41,7 +46,12 @@ public:
         return !(*this == r);
     }
 
+    size_t getIndex() {
+        return index;
+    }
+
 private:
+    size_t index;
     node *curent_ptr;
 };
 
