@@ -107,32 +107,80 @@ size_t TList<T>::GetSize() {
 }
 
 template<class T>
-void TList<T>::TakeAway(TList from, size_t first_i, size_t n) {
-    size_t last_i = first_i + n - 1;
-    auto lastInBase = this->base;
-    for (size_t i = 0; i < this->Size; ++i) {
-        lastInBase = lastInBase->Right;
+void TList<T>::TakeAway(TList &from, size_t first_i, size_t n) {
+    auto thisLast = this->base;
+    // here shoud be i = 0; i < this->Size - 1; ++i
+    // But I stupid and used unsigned size_t for Sizes :(
+    for (size_t i = 1; i < this->Size; ++i) {
+        thisLast = thisLast->Right;
     }
 
-    auto firstToTake = from.base;
+    auto firstToAdd = from.base;
     for (size_t i = 0; i < first_i; ++i) {
-        firstToTake = firstToTake->Right;
+        firstToAdd = firstToAdd->Right;
     }
 
-    auto lastToTake = firstToTake;
-    for (size_t i = first_i; i < last_i; ++i) {
-        lastToTake = lastToTake->Right;
+    auto lastToAdd = firstToAdd;
+    for (size_t i = 1; i < n; ++i) {
+        lastToAdd = lastToAdd->Right;
     }
 
-    if (lastInBase)
-        lastInBase->Right = firstToTake;
+    if (thisLast)
+        thisLast->Right = firstToAdd;
     else
-        this->base = firstToTake;
-    from.base =  lastToTake->Right;
-    lastToTake->Right = nullptr;
+        this->base = firstToAdd;
+    from.base = lastToAdd->Right;
+    lastToAdd->Right = nullptr;
 
     this->Size += n;
     from.Size  -= n;
 }
 
+template<class T>
+TListIterator<TListItem<T>, T> TList<T>::begin() {
+    return TListIterator<TListItem<T>, T>(this->base);
+}
+
+template<class T>
+TListIterator<TListItem<T>, T> TList<T>::end() {
+    return TListIterator<TListItem<T>, T>(nullptr);
+}
+
 #endif // LIST_CPP
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
