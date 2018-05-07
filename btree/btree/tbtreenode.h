@@ -11,7 +11,6 @@ private:
     // WARNING: Be carefull with associated lists
     TList<TBTreeItem> items;
     TList<TBTreeNode*> children;
-
     /* Left Child Index */
     size_t LCI(size_t item_index);
     /* Right Child Index */

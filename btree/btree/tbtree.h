@@ -6,6 +6,9 @@
 
 class TBTree
 {
+private:
+    TBTreeNode *root = nullptr;
+
 public:
     static const size_t DEGREE = 2;
     inline size_t MaxNumOfElements() {
@@ -20,9 +23,6 @@ public:
     bool Insert(TBTreeItem::KeyType k, TBTreeItem::ValueType v) {
         return Insert(TBTreeItem(k, v));
     }
-
-private:
-    TBTreeNode *root = nullptr;
 };
 
 #endif // TBTREE_H

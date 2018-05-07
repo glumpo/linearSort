@@ -16,20 +16,20 @@ TBTree::~TBTree() {
     }
 }
 
+// FIXME: Now searches only in first node
 TBTreeItem::ValueType TBTree::Search(TBTreeItem::KeyType k) {
-    auto cur = root;
-    TBTreeItem::ValueType candidateVal;
-    TBTreeItem::KeyType   candidateKey;
-    do {
-        size_t i = 0;
-        for (; i < cur->Size() && k > (*cur)[i].GetKey(); ++i)
-            ;
-        candidateKey = (*cur)[i].GetKey();
-        candidateVal = (*cur)[i].GetVal();
-    } while (k != candidateKey);
-    return candidateVal;
+    auto curNode = root;
+    for (auto it : *curNode) {
+        if (k == it.GetKey()) {
+            return it.GetVal();
+        }
+    }
+
+    return 0;
 }
 
+// TODO: Delete operator[], use iterator
+// FIXME: It adds element in strange order...
 bool TBTree::Insert(TBTreeItem item) {
     if (!root) {
         root = new TBTreeNode(true);
@@ -43,8 +43,12 @@ bool TBTree::Insert(TBTreeItem item) {
     auto prev = cur;
     while (true != cur->Leaf) {
         size_t i = 0;
-        for (; i < cur->Size() && (*cur)[i] < item; ++i)
-            ;
+        for (auto it : *cur) {
+            if (item < it)
+                break;
+            ++i;
+        }
+
         if (cur->Size() == i)
             --i;
 
