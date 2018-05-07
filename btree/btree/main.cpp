@@ -19,8 +19,11 @@ int main() {
     test.Insert(3,3.3);
     test.Insert(1,1.1);
     test.Insert(5,5.5);
+
+    test.Insert(6,6.6);
+    test.Insert(7,6.6);
     std::cout << "Iserted" <<  std::endl;;
-    std::cout << test.Search(1) <<  std::endl;
+    std::cout << test.Search(7) <<  std::endl;
     std::cout << "Exiting" <<  std::endl;
 
 //    TList<TBTreeItem> test;

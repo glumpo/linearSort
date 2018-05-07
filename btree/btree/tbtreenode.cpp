@@ -68,16 +68,24 @@ TBTreeNode* TBTreeNode::Split(bool leaf) {
 }
 
 void TBTreeNode::SplitLeftChild(size_t n) {
-    auto left     = new TBTreeNode(true);
-    auto right    = this;
+    auto left     = new TBTreeNode(this->Leaf);
+    auto right    = new TBTreeNode(this->Leaf);
     auto oldChild = this->children.Pop(LCI(n));
 
-    left->items.TakeAway(oldChild->items, 0, oldChild->items.GetSize() / 2 - 1);
-    left->children.TakeAway(oldChild->children, 0, oldChild->children.GetSize() / 2 - 1);
+    const size_t nToTake = (items.GetSize() % 2 == 1)
+            ?   (items.GetSize() / 2)
+            : ( (items.GetSize() - 1) / 2);
+
+    left->items.TakeAway(oldChild->items, 0, nToTake);
+    left->children.TakeAway(oldChild->children, 0, nToTake + 1);
 
     this->InsertBefore(oldChild->Pop(0), n);
-    this->children[LCI(n)] = left;
-    this->children[RCI(n)] = right;
+
+    right->items.TakeAway(oldChild->items, 0, nToTake);
+    right->children.TakeAway(oldChild->children, 0, nToTake + 1);
+
+    this->children.InsertBefore(left,  LCI(n));
+    this->children.InsertBefore(right, RCI(n));
 }
 
 
