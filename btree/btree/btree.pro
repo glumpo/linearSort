@@ -7,17 +7,16 @@ HEADERS = \
    $$PWD/tbtree.h \
    $$PWD/tbtreeitem.h \
    $$PWD/list.h \
-   $$PWD/tvector.h \
-   $$PWD/tvectoritem.h \
-    tbtreenode.h
+    tbtreenode.h \
+    tlistiterator.h
 
 SOURCES = \
    $$PWD/main.cpp \
    $$PWD/tbtree.cpp \
    $$PWD/tbtreeitem.cpp \
    $$PWD/list.cpp \
-   $$PWD/tvector.cpp \
-    tbtreenode.cpp
+    tbtreenode.cpp \
+    tlistiterator.cpp
 
 INCLUDEPATH = \
     $$PWD/.
