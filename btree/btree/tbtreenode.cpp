@@ -1,106 +1,122 @@
 #include "tbtreenode.h"
 
 
-TBTreeNode::TBTreeNode(bool leaf) {
-    this->Leaf = leaf;
+TBTreeNode::TBTreeNode(size_t size, bool leaf) :
+    Leaf(leaf),
+    ItemsSize(size)
+{
+    this->Items = malloc(sizeof(TNodeItem)  * ItemsSize);
+    ItemsCount  = 0;
 }
 
 size_t TBTreeNode::Size() {
-    return this->items.GetSize();
+    return ItemsCount;
 }
 
-TBTreeItem &TBTreeNode::operator[](size_t n) {
-    return items[n];
+TBTreeItem &TBTreeNode::operator[](const size_t n) {
+    return Items[n].item;
 }
 
-TBTreeNode* TBTreeNode::LeftChild(size_t n) {
-    return children[this->LCI(n)];
+TBTreeNode* TBTreeNode::LeftChild(const size_t n) {
+    return Items[n].child;
 }
 
-TBTreeNode* TBTreeNode::RightChild(size_t n) {
-    return children[RCI(n)];
+TBTreeNode* TBTreeNode::RightChild(const size_t n) {
+    if (n == ItemsCount - 1)
+        return BiggestChild;
+    return Items[n].child;
+}
+
+/*
+ * Binary Search
+ * NOTE: If element not found,
+ * Search returns index where element should be
+ */
+size_t TBTreeNode::Search(TBTreeItem::KeyType k) {
+    if (0 == ItemsCount)
+        return 0;
+
+    // if not in items
+    if (k < Items[0].Key()) {
+        return 0;
+    }
+    else if (k > Items[ItemsCount - 1].Key()) {
+        return ItemsCount;
+    }
+
+    size_t l = 0;
+    size_t r = ItemsCount - 1;
+    size_t m = 0;
+    while (l < r) {
+        m = l + (r - l) / 2;
+        if (k <= Items[m].Key())
+            r = m;
+        else
+            l = m + 1;
+    }
+    return last;
 }
 
 TBTreeItem TBTreeNode::Pop(size_t n) {
-    auto l = this->LCI(n);
-    auto r = this->RCI(n);
-
-    children.Pop(l);
-    children.Pop(r);
-    return items.Pop(n);
+    auto res = items[n];
+    DelItems(n);
+    --ItemsCount;
+    return res;
 }
 
-bool TBTreeNode::InsertBefore(TBTreeItem val, size_t n) {
-    this->items.InsertBefore(val, n);
-    this->children.InsertBefore(nullptr, this->LCI(n));
-    this->children.InsertBefore(nullptr, this->RCI(n));
-    return true;
+size_t TBTreeNode::Insert(TBTreeItem ins) {
+    size_t index = Search(ins.GetKey());
+    AddItems(index);
+    Items[index] = TNodeItem(ins, nullptr);
+    return index;
 }
 
-size_t TBTreeNode::InsertInSorted(TBTreeItem ins) {
-    size_t i = 0;
-    for (auto it : items) {
-        if (ins < it)
-            break;
-        ++i;
-    }
-    InsertBefore(ins, i);
-    return i;
-}
-
-TBTreeNode* TBTreeNode::Split(bool leaf) {
+TBTreeNode* TBTreeNode::Split() {
     auto newRoot = new TBTreeNode(false);
-    auto left    = new TBTreeNode(leaf);
+    auto left    = new TBTreeNode(this->Leaf);
     auto right   = this;
-    right->Leaf  = leaf;
 
-    const size_t n = (items.GetSize() % 2 == 1)
-            ?   (items.GetSize() / 2)
-            : ( (items.GetSize() - 1) / 2);
-    left->items.TakeAway(items, 0, n);
-    left->children.TakeAway(children, 0, n + 1);
+    const size_t n = (ItemsCount % 2 == 1)
+            ?   (ItemsCount / 2)
+            : ( (ItemsCount - 1) / 2);
+    for (size_t i = 0; i <= n; ++i) {
+        left->Insert(Items[i]);
+    }
+    DelItems(0, n);
+    left->ItemsCount += n;
+    this->ItemsCount -= n;
 
-    newRoot->InsertInSorted(this->Pop(0));
-    newRoot->children[LCI(0)] = left;
-    newRoot->children[RCI(0)] = right;
+    newRoot->Insert(Items[0]);
+    DelItems(0);
 
+    newRoot->BiggestChild   = right;
+    newRoot->Items[0].child = left;
     return newRoot;
 }
 
 void TBTreeNode::SplitLeftChild(size_t n) {
-    auto left     = new TBTreeNode(this->Leaf);
-    auto right    = new TBTreeNode(this->Leaf);
-    auto oldChild = this->children.Pop(LCI(n));
-
-    const size_t nToTake = (items.GetSize() % 2 == 1)
-            ?   (items.GetSize() / 2)
-            : ( (items.GetSize() - 1) / 2);
-
-    left->items.TakeAway(oldChild->items, 0, nToTake);
-    left->children.TakeAway(oldChild->children, 0, nToTake + 1);
-
-    this->InsertBefore(oldChild->Pop(0), n);
-
-    right->items.TakeAway(oldChild->items, 0, nToTake);
-    right->children.TakeAway(oldChild->children, 0, nToTake + 1);
-
-    this->children.InsertBefore(left,  LCI(n));
-    this->children.InsertBefore(right, RCI(n));
+    auto tmpNode = LeftChild(n)->Split();
+    AddItems(n);
+    Items[n] = tmpNode->Items[0];
+    Items[n + 1].child = tmpNode->BiggestChild;
+    delete tmpNode;
 }
 
 
-decltype(TBTreeNode::items.begin()) TBTreeNode::begin() {
-    return items.begin();
+bool TBTreeNode::DelItems(size_t n, size_t count = 1) {
+    size_t i = n;
+    for (; i < ItemsCount - count; ++i) {
+        Items[i] = Items[i + count];
+    }
+    ItemsCount -= count;
+    return true;
 }
 
-decltype(TBTreeNode::items.end()) TBTreeNode::end() {
-    return items.end();
-}
-
-size_t TBTreeNode::LCI(size_t item_index) {
-    return item_index;
-}
-
-size_t TBTreeNode::RCI(size_t item_index) {
-    return item_index + 1;
+bool TBTreeNode::AddItems(size_t n, size_t count = 1) {
+    size_t i = ItemsCount - 1;
+    for (; i >= n; --i) {
+        Items[i + count] = Items[i];
+    }
+    ItemsCount += count;
+    return true;
 }

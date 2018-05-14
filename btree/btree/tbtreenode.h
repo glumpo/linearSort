@@ -5,36 +5,53 @@
 #include "list.cpp"
 #include "tbtreeitem.h"
 
+
+struct TNodeItem
+{
+    TNodeItem(TBTreeItem i, TBTreeNode *ch) :
+        item(i),
+        child(ch)
+    {}
+    TBTreeItem item;
+    TBTreeNode *child;
+
+    inline TBTreeItem::KeyType Key() {
+        return item.GetKey();
+    }
+    inline TBTreeItem::ValueType Val() {
+        return item.GetVal();
+    }
+};
+
 class TBTreeNode
 {
 private:
-    // WARNING: Be carefull with associated lists
-    TList<TBTreeItem> items;
-    TList<TBTreeNode*> children;
-    /* Left Child Index */
-    size_t LCI(size_t item_index);
-    /* Right Child Index */
-    size_t RCI(size_t item_index);
+    // WARNING: Be carefull with associated arrays
+    TNodeItem Items[];
+    TBTreeNode *BiggestChild;
 
+    const size_t ItemsSize;
+    size_t       ItemsCount;
+
+    bool DelItems(size_t n, size_t count = 1);
+    bool AddItems(size_t n, size_t count = 1);
 public:
-    TBTreeNode(bool leaf);
+    TBTreeNode(size_t size, bool leaf);
 
-//    TODO: Rewrite all using of operator[]
-//    or make a cash for prev element of operator[]
-//    to archive O(n) on search
     size_t Size();
-    TBTreeItem& operator[] (size_t n);
-    TBTreeNode* LeftChild(size_t n);
-    TBTreeNode* RightChild(size_t n);
-
-    // Throws
+    TBTreeItem& operator[] (const size_t n);
     TBTreeItem Pop(size_t n);
-    bool InsertBefore(TBTreeItem val, size_t n);
-    size_t InsertInSorted(TBTreeItem ins);
+
+    TBTreeNode* LeftChild(const size_t n);
+    TBTreeNode* RightChild(const size_t n);
+
+    size_t Search(TBTreeItem::KeyType k);
+    size_t Insert(TBTreeItem ins);
+
     void SplitLeftChild(size_t n);
     TBTreeNode *Split(bool leaf);
 
-    // auto used to avoid usig TList realisation details
+    // decltype used to avoid usig TList realisation details
     decltype(items.begin()) begin();
     decltype(items.end())   end();
 
