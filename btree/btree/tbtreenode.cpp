@@ -1,12 +1,11 @@
 #include "tbtreenode.h"
 
 
-TBTreeNode::TBTreeNode(size_t size, bool leaf) :
-    Leaf(leaf),
-    ItemsSize(size)
+TBTreeNode::TBTreeNode(bool leaf) :
+    Leaf(leaf)
 {
-    this->Items = malloc(sizeof(TNodeItem)  * ItemsSize);
-    ItemsCount  = 0;
+    this->Items = (TNodeItem*)  malloc(sizeof(TNodeItem)  * ItemsSize);
+    ItemsCount = 0;
 }
 
 size_t TBTreeNode::Size() {
@@ -18,6 +17,8 @@ TBTreeItem &TBTreeNode::operator[](const size_t n) {
 }
 
 TBTreeNode* TBTreeNode::LeftChild(const size_t n) {
+    if (n == ItemsCount)
+        return BiggestChild;
     return Items[n].child;
 }
 
@@ -32,7 +33,7 @@ TBTreeNode* TBTreeNode::RightChild(const size_t n) {
  * NOTE: If element not found,
  * Search returns index where element should be
  */
-size_t TBTreeNode::Search(TBTreeItem::KeyType k) {
+size_t TBTreeNode::Search(KeyType k) {
     if (0 == ItemsCount)
         return 0;
 
@@ -44,6 +45,10 @@ size_t TBTreeNode::Search(TBTreeItem::KeyType k) {
         return ItemsCount;
     }
 
+    /*
+     *  WARNING: Check that bin search
+     *  returns the right candidate, when not found
+     */
     size_t l = 0;
     size_t r = ItemsCount - 1;
     size_t m = 0;
@@ -54,14 +59,14 @@ size_t TBTreeNode::Search(TBTreeItem::KeyType k) {
         else
             l = m + 1;
     }
-    return last;
+    return r;
 }
 
 TBTreeItem TBTreeNode::Pop(size_t n) {
-    auto res = items[n];
+    auto res = Items[n];
     DelItems(n);
     --ItemsCount;
-    return res;
+    return res.item;
 }
 
 size_t TBTreeNode::Insert(TBTreeItem ins) {
@@ -77,18 +82,17 @@ TBTreeNode* TBTreeNode::Split() {
     auto right   = this;
 
     const size_t n = (ItemsCount % 2 == 1)
-            ?   (ItemsCount / 2)
-            : ( (ItemsCount - 1) / 2);
+                 ?   (ItemsCount / 2)
+                 : ( (ItemsCount - 1) / 2);
     for (size_t i = 0; i <= n; ++i) {
-        left->Insert(Items[i]);
+        left->Insert(Items[i].item);
     }
     DelItems(0, n);
-    left->ItemsCount += n;
-    this->ItemsCount -= n;
 
-    newRoot->Insert(Items[0]);
+    newRoot->Insert(Items[0].item);
     DelItems(0);
 
+    left->ItemsCount = n;
     newRoot->BiggestChild   = right;
     newRoot->Items[0].child = left;
     return newRoot;
@@ -99,11 +103,11 @@ void TBTreeNode::SplitLeftChild(size_t n) {
     AddItems(n);
     Items[n] = tmpNode->Items[0];
     Items[n + 1].child = tmpNode->BiggestChild;
-    delete tmpNode;
+//    delete tmpNode;
 }
 
 
-bool TBTreeNode::DelItems(size_t n, size_t count = 1) {
+bool TBTreeNode::DelItems(size_t n, size_t count /* count = 1 */) {
     size_t i = n;
     for (; i < ItemsCount - count; ++i) {
         Items[i] = Items[i + count];
@@ -112,9 +116,15 @@ bool TBTreeNode::DelItems(size_t n, size_t count = 1) {
     return true;
 }
 
-bool TBTreeNode::AddItems(size_t n, size_t count = 1) {
-    size_t i = ItemsCount - 1;
-    for (; i >= n; --i) {
+bool TBTreeNode::AddItems(size_t n, size_t count /* count = 1 */) {
+    if (0 == ItemsCount) {
+        ItemsCount += count;
+        return true;
+    }
+
+    // FUCK THE UNSIGNED
+    signed long long int i = ItemsCount - 1, signedN = n;
+    for (; i >= signedN; --i) {
         Items[i + count] = Items[i];
     }
     ItemsCount += count;
