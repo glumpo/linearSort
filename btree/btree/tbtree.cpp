@@ -1,8 +1,57 @@
 #include "tbtree.h"
 
-TBTree::TBTree() {
 
+// That will split all full nodes on the way
+bool TBTree::FindParent(KeyType    key,
+                        TBTreeNode *(&res),
+                        TBTreeNode *(&cur),
+                        size_t     &childN,
+                        size_t     &n) {
+    res    = nullptr;
+    cur    = root;
+    childN = 0;
+    n      = 0;
+
+    if (nullptr == root) {
+        return false;
+    }
+
+    if (0 == root->Size()) {
+        return false;
+    }
+
+    if (MAX_NUM_OF_ELEMENTS <= root->Size()) {
+        auto newRoot = root->Split();
+        root = newRoot;
+        cur = root;
+    }
+    // TODO: Add spliting
+    // returns nullptr if element in root
+    childN = root->Search(key);
+    if (childN < root->Size() && (*root)[childN].GetKey() == key) {
+        n = childN;
+        return true;
+    }
+
+    if (root->Leaf) {
+        n = childN;
+        return false;
+    }
+
+    cur = root->LeftChild(childN);
+    n   = cur->Search(key);
+    res = root;
+
+    while ((*cur)[n].GetKey() != key && cur->Leaf == false) {
+        res     = cur;
+        childN = n;
+        cur = cur->LeftChild(childN);
+        n = cur->Search(key);
+    }
+    return true;
 }
+
+TBTree::TBTree() {}
 
 TBTree::~TBTree() {
     if (root) {
@@ -16,74 +65,33 @@ TBTree::~TBTree() {
     }
 }
 
-// FIXME: Now searches only in first node
-TBTreeItem::ValueType TBTree::Search(TBTreeItem::KeyType k) {
-    auto curNode = root;
+ValueType TBTree::Search(KeyType k) {
+    TBTreeNode *parent = nullptr, *cur = nullptr;
+    size_t childN = 0, n = 0;
 
-    while (true) {
-        auto it = curNode->begin();
-        for (; it != curNode->end(); ++it) {
-            if ((*it).GetKey() >= k)
-                break;
-        }
-
-        if (curNode->Size() == it.getIndex()) {
-            curNode = curNode->RightChild(it.getIndex() - 1);
-        }
-        else if ((*it).GetKey() == k) {
-            return (*it).GetVal();
-        }
-        else if ((*it).GetKey() > k) {
-            curNode = curNode->LeftChild(it.getIndex());
-        }
-        else {
-            curNode = curNode->RightChild(it.getIndex());
-        }
-    }
-    return 0;
+    FindParent(k, parent, cur, childN, n);
+    return (*cur)[n].GetVal();
 }
 
-// TODO: Delete operator[], use iterator
 bool TBTree::Insert(TBTreeItem item) {
     if (!root) {
         root = new TBTreeNode(true);
     }
 
-    if (MaxNumOfElements() <= root->Size()) {
-        root = root->Split(root->Leaf);
+    if (MAX_NUM_OF_ELEMENTS <= root->Size()) {
+        root = root->Split();
     }
 
-    auto cur = root;
-    auto prev = cur;
-    while (true != cur->Leaf) {
-        size_t i = 0;
-        for (auto it : *cur) {
-            if (item < it)
-                break;
-            ++i;
-        }
+    TBTreeNode *parent = nullptr, *cur = nullptr;
+    size_t childN = 0, n = 0;
 
-        if (cur->Size() == i)
-            --i;
+    FindParent(item.GetKey(), parent, cur, childN, n);
+    cur->Insert(item);
 
-        prev = cur;
-        if (item < (*cur)[i]) {
-            cur = cur->LeftChild(i);
-            if (MaxNumOfElements() <= cur->Size()) {
-                prev->SplitLeftChild(i);
-                cur = prev;
-                continue;
-            }
-        }
-        else {
-            cur = cur->RightChild(i);
-            if (MaxNumOfElements() <= cur->Size()) {
-                prev->SplitLeftChild(i + 1);
-                cur = prev;
-                continue;
-            }
-        }
+    if (MAX_NUM_OF_ELEMENTS <= cur->Size()) {
+        if (parent)
+            parent->SplitLeftChild(childN);
     }
-    cur->InsertInSorted(item);
+
     return true;
 }
