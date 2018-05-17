@@ -1,12 +1,13 @@
 #ifndef TBTREEITEM_H
 #define TBTREEITEM_H
 
+#include "btree_options.h"
+
+using namespace BTreeOptions;
+
 class TBTreeItem
 {
-public:
-    typedef int    KeyType;
-    typedef double ValueType;
-
+public:    
     TBTreeItem(KeyType key, ValueType val):
         Key(key),
         Value(val) {}
@@ -22,10 +23,10 @@ public:
         return !(*this == r);
     }
 
-    ValueType GetVal() {
+    inline ValueType GetVal() {
         return this->Value;
     }
-    KeyType GetKey() {
+    inline KeyType GetKey() {
         return this->Key;
     }
 
@@ -33,5 +34,6 @@ private:
     KeyType Key;
     ValueType Value;
 };
+
 
 #endif // TBTREEITEM_H
