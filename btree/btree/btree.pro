@@ -6,17 +6,14 @@
 HEADERS = \
    $$PWD/tbtree.h \
    $$PWD/tbtreeitem.h \
-   $$PWD/list.h \
     tbtreenode.h \
-    tlistiterator.h
+    btree_options.h
 
 SOURCES = \
    $$PWD/main.cpp \
    $$PWD/tbtree.cpp \
    $$PWD/tbtreeitem.cpp \
-   $$PWD/list.cpp \
     tbtreenode.cpp \
-    tlistiterator.cpp
 
 INCLUDEPATH = \
     $$PWD/.
