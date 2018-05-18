@@ -35,7 +35,6 @@ public:
 
     size_t Size();
     TBTreeItem& operator[] (const size_t n);
-    TBTreeItem Pop(size_t n);
 
     TBTreeNode* LeftChild(const size_t n);
     TBTreeNode* RightChild(const size_t n);
@@ -52,10 +51,10 @@ private:
     bool AddItems(const size_t n, const size_t count = 1);
 
     static const size_t ItemsSize = MAX_NUM_OF_ELEMENTS;
-    size_t       ItemsCount;
+    size_t              ItemsCount;
 
     TBTreeNode *BiggestChild;
-    TNodeItem *Items;
+    TNodeItem  *Items;
 };
 
 #endif // TBTREENODE_H

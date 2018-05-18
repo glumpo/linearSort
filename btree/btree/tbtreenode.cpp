@@ -46,8 +46,7 @@ size_t TBTreeNode::Search(KeyType k) {
     }
 
     /*
-     *  WARNING: Check that bin search
-     *  returns the right candidate, when not found
+     *  NOTE: Bin search should return the right (the last) candidate, when not found
      */
     size_t l = 0;
     size_t r = ItemsCount - 1;
@@ -62,12 +61,6 @@ size_t TBTreeNode::Search(KeyType k) {
     return r;
 }
 
-TBTreeItem TBTreeNode::Pop(size_t n) {
-    auto res = Items[n];
-    DelItems(n);
-    --ItemsCount;
-    return res.item;
-}
 
 size_t TBTreeNode::Insert(TBTreeItem ins) {
     size_t index = Search(ins.GetKey());
@@ -103,7 +96,10 @@ void TBTreeNode::SplitLeftChild(size_t n) {
     auto tmpNode = LeftChild(n)->Split();
     AddItems(n);
     Items[n] = tmpNode->Items[0];
-    Items[n + 1].child = tmpNode->BiggestChild;
+    if (n == ItemsCount - 1)
+        BiggestChild = tmpNode->BiggestChild;
+    else
+        Items[n + 1].child = tmpNode->BiggestChild;
 //    delete tmpNode;
 }
 
