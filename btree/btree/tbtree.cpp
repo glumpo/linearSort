@@ -43,12 +43,18 @@ bool TBTree::FindParent(KeyType    key,
     res = root;
 
     while ((*cur)[n].GetKey() != key && cur->Leaf == false) {
+        if (cur->Size() >= MAX_NUM_OF_ELEMENTS) {
+            res->SplitLeftChild(childN);
+            cur = res;
+            n   = cur->Search(key); // TODO: Optimisation needed
+            continue;
+        }
         res     = cur;
-        childN = n;
-        cur = cur->LeftChild(childN);
-        n = cur->Search(key);
+        childN  = n;
+        cur     = cur->LeftChild(childN);
+        n       = cur->Search(key);
     }
-    return true;
+    return !cur->Leaf;
 }
 
 TBTree::TBTree() {}
@@ -90,7 +96,7 @@ bool TBTree::Insert(TBTreeItem item) {
 
     if (MAX_NUM_OF_ELEMENTS <= cur->Size()) {
         if (parent)
-            parent->SplitLeftChild(childN);
+            parent->SplitLeftChild(childN); // FIXME: Here some strange pertrubations wit itemsCount
     }
 
     return true;
