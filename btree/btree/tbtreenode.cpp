@@ -85,8 +85,9 @@ TBTreeNode* TBTreeNode::Split() {
                  ?   (ItemsCount / 2)
                  : ( (ItemsCount - 1) / 2);
     for (size_t i = 0; i <= n; ++i) {
-        left->Insert(Items[i].item);
+        left->Items[i] = this->Items[i];
     }
+    left->BiggestChild = this->Items[n].child;
     DelItems(0, n);
 
     newRoot->Insert(Items[0].item);
@@ -107,7 +108,7 @@ void TBTreeNode::SplitLeftChild(size_t n) {
 }
 
 
-bool TBTreeNode::DelItems(size_t n, size_t count /* count = 1 */) {
+bool TBTreeNode::DelItems(const size_t n, const size_t count /* count = 1 */) {
     size_t i = n;
     for (; i < ItemsCount - count; ++i) {
         Items[i] = Items[i + count];
@@ -116,7 +117,7 @@ bool TBTreeNode::DelItems(size_t n, size_t count /* count = 1 */) {
     return true;
 }
 
-bool TBTreeNode::AddItems(size_t n, size_t count /* count = 1 */) {
+bool TBTreeNode::AddItems(const size_t n,  const size_t count /* count = 1 */) {
     if (0 == ItemsCount) {
         ItemsCount += count;
         return true;

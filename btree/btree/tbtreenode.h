@@ -48,8 +48,8 @@ public:
 
     bool Leaf;
 private:
-    bool DelItems(size_t n, size_t count = 1);
-    bool AddItems(size_t n, size_t count = 1);
+    bool DelItems(const size_t n, const size_t count = 1);
+    bool AddItems(const size_t n, const size_t count = 1);
 
     static const size_t ItemsSize = MAX_NUM_OF_ELEMENTS;
     size_t       ItemsCount;
